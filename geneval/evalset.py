@@ -5,8 +5,9 @@ MANIFEST.json with a SHA-256 per item (its canonical JSON plus the bytes of any 
 one hash for the whole set. `load` recomputes everything and refuses to run if any item drifted, so
 two leaderboards with the same version string are guaranteed to have scored the same prompts.
 
-Item ids are stable across versions; results are keyed by (evalset hash, item id, item hash), so an
-item that is unchanged in v2 can reuse its v1 generations.
+Each item also has a `render_key`: the hash of only what the model sees (endpoint, prompt, aspect,
+duration, reference bytes). A new version that changes how an item is *scored* (new foils, new
+checks) keeps the render_key, so its run reuses the earlier renders and costs no credits.
 """
 from __future__ import annotations
 
@@ -36,16 +37,24 @@ class Item:
     scene: str | None = None        # what CLIP should see (defaults to the prompt)
     foils: tuple[str, ...] = ()
     adherence_frames: str = "all"
+    checks: tuple = ()              # verifiable facts (see scorers/checks.py), v2+
     hash: str = ""
+    render_key: str = ""            # hash of only what the model sees; scoring changes keep it
 
     @property
     def scorers(self) -> list[str]:
-        return SCORERS_FOR[self.suite]
+        return SCORERS_FOR[self.suite] + (["checks"] if self.checks else [])
 
     def canonical(self) -> dict:
-        d = {k: v for k, v in self.__dict__.items() if k != "hash"}
-        d["text"], d["foils"] = list(self.text), list(self.foils)
+        d = {k: v for k, v in self.__dict__.items() if k not in ("hash", "render_key")}
+        d["text"], d["foils"], d["checks"] = list(self.text), list(self.foils), list(self.checks)
+        if not d["checks"]:
+            del d["checks"]          # keeps v1 item hashes stable
         return d
+
+    def render_inputs(self) -> dict:
+        return {"endpoint": self.endpoint, "prompt": self.prompt, "aspect_ratio": self.aspect_ratio,
+                "seconds": self.seconds, "ref": self.ref}
 
 
 @dataclass
@@ -86,7 +95,7 @@ def _parse(d: pathlib.Path) -> tuple[str, list[Item], dict]:
                 aspect_ratio=it.get("aspect_ratio", defaults.get("aspect_ratio", "1:1")),
                 seconds=float(it.get("seconds", s.get("seconds", 0))), ref=ref,
                 text=tuple(it.get("text", ())), scene=it.get("scene"), foils=tuple(it.get("foils", ())),
-                adherence_frames=s.get("adherence_frames", "all")))
+                adherence_frames=s.get("adherence_frames", "all"), checks=tuple(it.get("checks", ()))))
     return raw["version"], items, {k: {kk: vv for kk, vv in v.items() if kk != "items"}
                                    for k, v in raw["suites"].items()}
 
@@ -95,10 +104,13 @@ def _hash_items(d: pathlib.Path, items: list[Item]) -> tuple[list[Item], dict[st
     hashed, per = [], {}
     for it in items:
         h = hashlib.sha256(json.dumps(it.canonical(), sort_keys=True).encode())
+        rk = hashlib.sha256(json.dumps(it.render_inputs(), sort_keys=True).encode())
         if it.ref:
-            h.update((d / it.ref).read_bytes())
+            ref = (d / it.ref).read_bytes()
+            h.update(ref)
+            rk.update(ref)
         per[it.id] = h.hexdigest()
-        hashed.append(Item(**{**it.__dict__, "hash": per[it.id]}))
+        hashed.append(Item(**{**it.__dict__, "hash": per[it.id], "render_key": rk.hexdigest()}))
     whole = _sha(json.dumps(per, sort_keys=True).encode())
     return hashed, per, whole
 
