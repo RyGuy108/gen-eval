@@ -89,7 +89,7 @@ def dominant_color(px: np.ndarray) -> str:
     """px: N x 3 HSV in PIL's 0-255 ranges. Vote over pixels; highlights and deep shadows abstain."""
     h, s, v = px[:, 0] * 360 / 255, px[:, 1] / 255, px[:, 2] / 255
     lit = (v > 0.12) & (v < 0.97)
-    chroma = lit & (s >= 0.25)
+    chroma = lit & (s >= 0.3)
     votes = {}
     brown = chroma & (h >= 10) & (h < 35) & (v < 0.6)
     for name, lo, hi in (("red", 345, 361), ("red", 0, 10), ("orange", 10, 40), ("yellow", 40, 70),
@@ -97,8 +97,9 @@ def dominant_color(px: np.ndarray) -> str:
         votes[name] = votes.get(name, 0) + int((chroma & ~brown & (h >= lo) & (h < hi)).sum())
     votes["brown"] = int(brown.sum())
     # An object with a real color usually also has highlights, shadows and white patches (a blue
-    # bird's belly); if a fair share of it is chromatic, only chromatic names compete.
-    if chroma.sum() >= 0.2 * max(1, lit.sum()):
+    # bird's belly); if a fair share of *all* its pixels is chromatic, only chromatic names compete.
+    # (The share is over all pixels so a black cat's yellow eyes don't make it a yellow cat.)
+    if chroma.sum() >= 0.25 * len(px):
         return max(votes, key=votes.get)
     grey = lit & ~chroma
     votes = {"black": int((v <= 0.12).sum()), "white": int((grey & (v >= 0.75)).sum()),
