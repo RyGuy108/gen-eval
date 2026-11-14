@@ -14,6 +14,3 @@ uvicorn[standard]>=0.30
 psycopg[binary]>=3.2
 redis>=5.0
 rq>=2.0
-# adherence fact checks (eval set v2+); the rest of the harness runs without them
-torch>=2.4
-ultralytics>=8.3

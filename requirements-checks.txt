@@ -1,0 +1,4 @@
+-r requirements.txt
+# adherence fact checks (eval set v2+); everything else runs without torch
+torch>=2.4
+ultralytics>=8.3
