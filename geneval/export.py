@@ -18,8 +18,15 @@ from collections import defaultdict
 from . import evalset, quality, rank
 
 
-def router_rows(run_ids: list[int], out_path: str) -> int:
-    rows = rank.fetch(run_ids)
+# Models in the router's catalog (router/catalog.py). Its trainer indexes outcomes by catalog name,
+# so rows are filtered to these unless the caller passes its own list.
+ROUTER_CATALOG = {"z-image-turbo", "flux-schnell", "qwen-image-2.1", "krea-2", "seedream-v4", "gpt-image-2",
+                  "seedream-v5-pro", "nano-banana-pro", "kling-2.6", "ltx-2.5", "kling-3.0",
+                  "seedance-2.0-mini", "veo3.1-lite", "seedance-2.0"}
+
+
+def router_rows(run_ids: list[int], out_path: str, models: set[str] | None = ROUTER_CATALOG) -> int:
+    rows = [r for r in rank.fetch(run_ids) if models is None or r["model"] in models]
     by_item = defaultdict(list)
     for r in rows:
         by_item[(r["evalset"], r["item_id"])].append(r)
@@ -33,6 +40,8 @@ def router_rows(run_ids: list[int], out_path: str) -> int:
                 metrics = {**r["metrics"]}
                 outcomes[r["model"]].append({"q": round(r["q"], 4), **quality.bars(r["suite"], metrics),
                                              "credits": r["credits"]})
+            if not outcomes:
+                continue
             f.write(json.dumps({
                 "id": f"{ver}:{item_id}", "source": f"gen-eval {ver}", "suite": it.suite,
                 "req": {"task": it.task, "prompt": it.prompt, "resolution": res,

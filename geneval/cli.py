@@ -37,6 +37,7 @@ def main(argv=None):
     cb = sp.add_parser("calibrate"); cb.add_argument("run_ids", type=int, nargs="+"); cb.add_argument("--labeler")
     cb.add_argument("--json")
     ex = sp.add_parser("export-router"); ex.add_argument("run_ids", type=int, nargs="+"); ex.add_argument("--out", required=True)
+    ex.add_argument("--all-models", action="store_true", help="also models outside the router catalog")
     a = ap.parse_args(argv)
 
     from . import db, evalset, runner
@@ -92,7 +93,8 @@ def main(argv=None):
             open(a.json, "w").write(json.dumps(res, indent=2, default=float))
     elif a.cmd == "export-router":
         from . import export
-        n = export.router_rows(a.run_ids, a.out); print(f"wrote {n} rows -> {a.out}")
+        n = export.router_rows(a.run_ids, a.out, None if a.all_models else export.ROUTER_CATALOG)
+        print(f"wrote {n} rows -> {a.out}")
 
 
 if __name__ == "__main__":
