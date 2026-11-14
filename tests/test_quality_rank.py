@@ -62,3 +62,12 @@ def test_zero_pass_rate_ranks_last():
     rows = _rows("never", 1, [0, 0, 0]) + _rows("ok", 100, [1, 0, 1])
     s = rank.summarize(rows)["text"]
     assert s[-1]["model"] == "never" and math.isinf(s[-1]["credits_per_pass"])
+
+
+def test_router_bars_for_every_suite():
+    face = {"face_sim": 0.55, "face_sim_min": 0.5}
+    clip = {"contrastive": 0.9, "beats_all_foils": True, "margin": 0.05}
+    assert quality.bars("character", {"face": face, "clip": clip}) == {"draft": 1, "standard": 1, "premium": 1}
+    assert quality.bars("video", {"face": face, "clip": clip})["premium"] == 1
+    checks = {"fact_score": 0.5, "all_facts": False}
+    assert quality.bars("adherence", {"clip": clip, "checks": checks}) == {"draft": 1, "standard": 0, "premium": 0}
