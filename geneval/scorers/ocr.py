@@ -14,13 +14,23 @@ Models also invent text nobody asked for: fake menu boards, lorem-ipsum signage,
 `gibberish` counts OCR'd words (4+ letters, not part of a target) that are not English words by
 wordfreq's frequency list. Real background text ("COFFEE", "PASTRIES") is fine; "TUNCKEOGFHCK" is
 the artifact customers screenshot and complain about.
+
+Two fixes came out of checking scores against the rendered images:
+  * reading order: receipts and menus put prices in a right-hand column, and sorting boxes by a
+    rounded y split "2 TACOS ... 8.50" into separate rows. Boxes are now clustered into rows by
+    vertical overlap and each row is read left to right.
+  * multi-view: heavy slanted thumbnail fonts ("I TRIED 7 AI MODELS") are often missed by the text
+    detector on the color image but found on the grayscale or inverted image with a looser box
+    threshold. Each target keeps its best reading across views. OCR does not invent the exact target
+    string, so taking the max is safe; gibberish is counted on the primary view only.
+OCR-confusable glyphs (0/O, 1/I/L, 5/S, 8/B, 2/Z) are folded before matching.
 """
 from __future__ import annotations
 
 import re
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 from wordfreq import zipf_frequency
 
 
@@ -44,24 +54,44 @@ def substring_distance(pattern: str, text: str) -> int:
     return int(prev.min())                                    # free end anywhere in text
 
 
+_FOLD = str.maketrans({"0": "O", "Q": "O", "1": "I", "L": "I", "5": "S", "8": "B", "2": "Z"})
+
+
 def char_accuracy(target: str, text: str) -> float:
-    t = normalize(target)
+    t, x = normalize(target), normalize(text)
     if not t:
         return 1.0
-    # Signs often break one phrase over two lines; spaces are compared too, so we also try the
-    # text with spaces removed on both sides and keep the better reading.
-    a = 1 - substring_distance(t, normalize(text)) / len(t)
-    b = 1 - substring_distance(t.replace(" ", ""), normalize(text).replace(" ", "")) / len(t.replace(" ", ""))
-    return float(max(0.0, a, b))
+    # Signs often break one phrase over two lines and OCR drops or adds spaces, so we also compare
+    # with spaces removed, and with OCR-confusable glyphs folded; the best reading wins.
+    best = 0.0
+    for tt, xx in ((t, x), (t.replace(" ", ""), x.replace(" ", ""))):
+        for a, b in ((tt, xx), (tt.translate(_FOLD), xx.translate(_FOLD))):
+            best = max(best, 1 - substring_distance(a, b) / len(a))
+    return float(max(0.0, best))
+
+
+def _is_word(w: str) -> bool:
+    return zipf_frequency(w.lower(), "en") >= 1.0
+
+
+def _two_words(w: str) -> bool:
+    """OCR often drops a space ("ITRIED", "NETWT"): accept a split into two common words."""
+    return any(zipf_frequency(w[:i].lower(), "en") >= 2.5 and zipf_frequency(w[i:].lower(), "en") >= 2.5
+               for i in range(3, len(w) - 2))
 
 
 def gibberish_words(text: str, targets: list[str]) -> list[str]:
-    allowed = set(normalize(" ".join(targets)).split())
+    """Invented non-words. Misreadings of the requested text are excluded here (they already cost
+    legibility); this only counts junk the model added on its own."""
+    want = normalize(" ".join(targets)).replace(" ", "")
     out = []
     for w in normalize(text).split():
         w = w.strip("'")
-        if len(w) >= 4 and w.isalpha() and w not in allowed and zipf_frequency(w.lower(), "en") < 1.0:
-            out.append(w)
+        if len(w) < 4 or not w.isalpha() or _is_word(w) or _two_words(w):
+            continue
+        if want and substring_distance(w, want) <= max(1, len(w) // 4):
+            continue
+        out.append(w)
     return out
 
 
@@ -71,21 +101,60 @@ class OcrScorer:
         self.engine = RapidOCR()
         self.min_conf = min_conf
 
-    def read(self, img: Image.Image) -> list[tuple[str, float]]:
+    def boxes(self, img: Image.Image, **kw) -> list[tuple[float, float, float, str]]:
+        """[(y_center, height, x_left, text)] for confident detections."""
         arr = np.asarray(img.convert("RGB"))[:, :, ::-1].copy()
-        res, _ = self.engine(arr)
-        if not res:
-            return []
-        # reading order: top-to-bottom, then left-to-right
-        res = sorted(res, key=lambda r: (round(min(p[1] for p in r[0]) / 20), min(p[0] for p in r[0])))
-        return [(txt, float(conf)) for _, txt, conf in res if float(conf) >= self.min_conf]
+        res, _ = self.engine(arr, **kw)
+        out = []
+        for box, txt, conf in res or []:
+            if float(conf) >= self.min_conf:
+                ys = [p[1] for p in box]
+                out.append(((min(ys) + max(ys)) / 2, max(ys) - min(ys), min(p[0] for p in box), txt))
+        return out
+
+    @staticmethod
+    def reading_order(boxes) -> str:
+        """Cluster boxes into rows by vertical overlap, read each row left to right."""
+        rows: list[list] = []
+        for b in sorted(boxes, key=lambda b: b[0]):
+            for row in rows:
+                if abs(row[0][0] - b[0]) <= 0.5 * min(row[0][1], b[1]):
+                    row.append(b)
+                    break
+            else:
+                rows.append([b])
+        return " ".join(b[3] for row in rows for b in sorted(row, key=lambda b: b[2]))
+
+    @staticmethod
+    def row_pairs(boxes) -> list[str]:
+        """Two boxes on roughly the same (possibly tilted) line, left one first: catches
+        "2 TACOS" + "8.50" on a receipt photographed at an angle, where strict rows split them."""
+        out = []
+        for a in boxes:
+            for b in boxes:
+                if b[2] > a[2] and abs(a[0] - b[0]) <= 1.2 * max(a[1], b[1]):
+                    out.append(f"{a[3]} {b[3]}")
+        return out
+
+    def read(self, img: Image.Image, **kw) -> list[tuple[str, float]]:
+        return [(self.reading_order(self.boxes(img, **kw)), 1.0)]
+
+    def views(self, img: Image.Image) -> list[str]:
+        loose = dict(box_thresh=0.3, unclip_ratio=2.0, text_score=0.3)
+        out = []
+        for i, (im, kw) in enumerate(((img, {}), (ImageOps.grayscale(img).convert("RGB"), loose),
+                                      (ImageOps.invert(img.convert("RGB")), loose))):
+            bx = self.boxes(im, **kw)
+            out.append(self.reading_order(bx))
+            out.extend(self.row_pairs(bx) if i == 0 else [])
+        return out
 
     def score(self, imgs: list[Image.Image], targets: list[str]) -> dict:
         best = {"legibility": -1.0}
         for im in imgs:                          # video: best frame (text may appear mid-clip)
-            lines = self.read(im)
-            text = " ".join(t for t, _ in lines)
-            per = [char_accuracy(t, text) for t in targets]
+            views = self.views(im)
+            text = views[0]
+            per = [max(char_accuracy(t, v) for v in views) for t in targets]
             junk = gibberish_words(text, targets)
             r = {"legibility": float(np.mean(per)), "per_target": per,
                  "exact": all(p >= 0.999 for p in per), "gibberish": len(junk),

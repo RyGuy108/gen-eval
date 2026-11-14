@@ -24,7 +24,7 @@ from .providers.magichour import MagicHour, Target
 
 ARTIFACTS = pathlib.Path(os.environ.get("GENEVAL_ARTIFACTS", pathlib.Path(__file__).parents[1] / "artifacts"))
 REDIS_URL = os.environ.get("GENEVAL_REDIS", "redis://localhost:6379/0")
-SCORER_VERSION = {"face": "yunet-sface-1", "ocr": "rapidocr-1.4.4-sellers-2", "clip": None}
+SCORER_VERSION = {"face": "yunet-sface-1", "ocr": "rapidocr-1.4.4-sellers-3", "clip": None}
 N_FRAMES = 8
 
 # KEYS[1]=spent KEYS[2]=reserved  ARGV[1]=budget ARGV[2]=amount -> 1 reserved / 0 over budget

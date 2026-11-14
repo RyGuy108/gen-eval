@@ -25,3 +25,7 @@ def test_gibberish_ignores_real_words_and_targets():
     text = "MORNING BREW CAFE OPEN DAILY PASTRIES Tadey Spoe TunckeogFhck"
     assert gibberish_words(text, ["MORNING BREW CAFE"]) == ["TADEY", "SPOE", "TUNCKEOGFHCK"]
     assert gibberish_words("WORLD'S OKAYEST DEVELOPER", ["WORLD'S OKAYEST DEVELOPER"]) == []
+
+
+def test_confusable_glyphs_are_folded():
+    assert char_accuracy("NET WT 12 OZ", "NETWT120Z") == 1.0
