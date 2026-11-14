@@ -31,6 +31,10 @@ def main(argv=None):
     r.add_argument("--local", action="store_true"); r.add_argument("--workers", type=int, default=6)
     s = sp.add_parser("score"); s.add_argument("run_id", type=int); s.add_argument("--force", action="store_true")
     lb = sp.add_parser("leaderboard"); lb.add_argument("run_ids", type=int, nargs="+"); lb.add_argument("--json")
+    il = sp.add_parser("import-labels"); il.add_argument("path"); il.add_argument("--labeler", required=True)
+    il.add_argument("--runs", required=True)
+    cb = sp.add_parser("calibrate"); cb.add_argument("run_ids", type=int, nargs="+"); cb.add_argument("--labeler")
+    cb.add_argument("--json")
     ex = sp.add_parser("export-router"); ex.add_argument("run_ids", type=int, nargs="+"); ex.add_argument("--out", required=True)
     a = ap.parse_args(argv)
 
@@ -57,6 +61,33 @@ def main(argv=None):
         print(rank.format_table(board))
         if a.json:
             open(a.json, "w").write(json.dumps(board, indent=2))
+    elif a.cmd == "import-labels":
+        from . import rank
+        gens = {(r["item_id"], r["model"]): r["id"] for r in rank.fetch(_csv(a.runs) and [int(x) for x in _csv(a.runs)])}
+        n = 0
+        with db.connect() as c:
+            for line in open(a.path):
+                lab = json.loads(line)
+                gid = gens.get((lab["item_id"], lab["model"]))
+                if gid is None:
+                    print("no generation for", lab["item_id"], lab["model"]); continue
+                c.execute("""INSERT INTO labels (generation_id, labeler, acceptable, note) VALUES (%s,%s,%s,%s)
+                             ON CONFLICT (generation_id, labeler) DO UPDATE SET acceptable=EXCLUDED.acceptable,
+                             note=EXCLUDED.note""", (gid, a.labeler, lab["acceptable"], lab.get("note")))
+                n += 1
+            c.commit()
+        print(f"imported {n} labels")
+    elif a.cmd == "calibrate":
+        from . import calibrate
+        res = calibrate.calibrate(a.run_ids, a.labeler)
+        for suite, r in res.items():
+            print(f"{suite:<10} n={r['n']:<3} base={r['base_rate']:.2f} acc={r['accuracy']:.2f} "
+                  f"prec={r['precision']:.2f} rec={r['recall']:.2f} auc={r['auc']:.2f} "
+                  f"P@1={r['p_at_1']:.2f} P@3={r['p_at_3']:.2f} P@5pool={r['p_at_5_pooled']:.2f} "
+                  f"rho={r.get('model_rank_spearman', float('nan')):.2f} best_t={r['best_threshold']:.3f}"
+                  f"({r['best_threshold_accuracy']:.2f})")
+        if a.json:
+            open(a.json, "w").write(json.dumps(res, indent=2, default=float))
     elif a.cmd == "export-router":
         from . import export
         n = export.router_rows(a.run_ids, a.out); print(f"wrote {n} rows -> {a.out}")
