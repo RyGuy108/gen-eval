@@ -1,8 +1,9 @@
 """Turn raw scorer metrics into one quality number in [0, 1] and a pass/fail per output.
 
 The pass bars are what a paying customer would accept without regenerating:
-  text       every required string read back with >= 90% character accuracy (a single OCR slip on a
-             stylized font is tolerated, a misspelled word is not)
+  text       every required string read back with >= 95% character accuracy and at most one invented
+             non-word anywhere in the image (q2; q1 used 90% and ignored invented text, which passed
+             "MORNNG BREW CAFE" and garbled fake menus that a person rejects)
   adherence  the prompt beats every foil in the contrastive CLIP test
   character  SFace says same person (cos >= 0.363) AND the requested scene beats its foils, including
              the "plain studio headshot" foil, so returning the reference photo fails
@@ -16,8 +17,9 @@ from __future__ import annotations
 
 import math
 
-QUALITY_VERSION = "q1"
-TEXT_PASS = 0.90
+QUALITY_VERSION = "q2"
+TEXT_PASS = 0.95
+TEXT_MAX_GIBBERISH = 1
 FACE_SAME = 0.363
 FACE_FULL = 0.60      # similarity at which identity counts as fully preserved
 
@@ -29,9 +31,12 @@ def _face01(s: float) -> float:
 def judge(suite: str, m: dict) -> tuple[float, bool]:
     """m is {scorer: metrics} for one generation."""
     if suite == "text":
-        per = m["ocr"]["per_target"]
-        return float(m["ocr"]["legibility"]), bool(min(per) >= TEXT_PASS)
+        worst, junk = min(m["ocr"]["per_target"]), m["ocr"].get("gibberish", 0)
+        q = worst * (1.0 if junk == 0 else 0.9 if junk <= 2 else 0.7)
+        return float(q), bool(worst >= TEXT_PASS and junk <= TEXT_MAX_GIBBERISH)
     if suite == "adherence":
+        if "checks" in m:            # v2+: verified facts; contrastive CLIP failed calibration
+            return float(m["checks"]["fact_score"]), bool(m["checks"]["all_facts"])
         c = m["clip"]
         return float(c["contrastive"]), bool(c["beats_all_foils"])
     if suite == "character":
@@ -58,7 +63,7 @@ def bars(suite: str, m: dict) -> dict[str, int]:
     if suite == "text":
         prem = ok and m["ocr"].get("exact", False) and m["ocr"].get("gibberish", 0) == 0
     elif suite == "adherence":
-        prem = ok and m["clip"].get("margin", 0) >= 0.02
+        prem = ok and ("checks" in m or m["clip"].get("margin", 0) >= 0.02)
     elif suite == "character":
         prem = ok and m["face"]["face_sim"] >= 0.5
     else:

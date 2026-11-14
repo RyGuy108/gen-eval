@@ -4,11 +4,17 @@ from geneval import quality, rank
 
 
 def test_text_pass_requires_every_string():
-    m = {"ocr": {"legibility": 0.95, "per_target": [1.0, 0.9], "exact": False, "gibberish": 0}}
+    m = {"ocr": {"legibility": 0.98, "per_target": [1.0, 0.96], "exact": False, "gibberish": 0}}
     q, ok = quality.judge("text", m)
-    assert q == 0.95
-    m["ocr"]["per_target"] = [1.0, 0.5]
+    assert q == 0.96 and ok
+    m["ocr"]["per_target"] = [1.0, 0.9]
     assert not quality.judge("text", m)[1]
+
+
+def test_text_invented_gibberish_fails():
+    m = {"ocr": {"per_target": [1.0], "gibberish": 4}}
+    q, ok = quality.judge("text", m)
+    assert not ok and q == 0.7
 
 
 def test_character_returning_reference_fails():
