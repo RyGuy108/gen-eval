@@ -27,6 +27,7 @@ def main(argv=None):
     p.add_argument("--name", required=True); p.add_argument("--evalset", default="v1")
     p.add_argument("--budget", type=int, required=True); p.add_argument("--models")
     p.add_argument("--suites"); p.add_argument("--items"); p.add_argument("--samples", type=int, default=1)
+    p.add_argument("--reuse", help="comma-separated earlier run ids whose identical renders are reused")
     r = sp.add_parser("run"); r.add_argument("run_id", type=int)
     r.add_argument("--local", action="store_true"); r.add_argument("--workers", type=int, default=6)
     s = sp.add_parser("score"); s.add_argument("run_id", type=int); s.add_argument("--force", action="store_true")
@@ -45,7 +46,8 @@ def main(argv=None):
         m = evalset.freeze(a.version); print(f"{a.version} {m['hash'][:12]} ({m['n_items']} items)")
     elif a.cmd == "plan":
         es = evalset.load(a.evalset)
-        rid = runner.create_run(a.name, es, _csv(a.models), a.budget, _csv(a.suites), a.samples, _csv(a.items))
+        rid = runner.create_run(a.name, es, _csv(a.models), a.budget, _csv(a.suites), a.samples, _csv(a.items),
+                                [int(x) for x in _csv(a.reuse) or []])
         print(rid)
     elif a.cmd == "run":
         print(runner.run_local(a.run_id, a.workers) if a.local else f"enqueued {runner.enqueue_run(a.run_id)}")

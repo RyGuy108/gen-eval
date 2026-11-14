@@ -24,7 +24,8 @@ from .providers.magichour import MagicHour, Target
 
 ARTIFACTS = pathlib.Path(os.environ.get("GENEVAL_ARTIFACTS", pathlib.Path(__file__).parents[1] / "artifacts"))
 REDIS_URL = os.environ.get("GENEVAL_REDIS", "redis://localhost:6379/0")
-SCORER_VERSION = {"face": "yunet-sface-1", "ocr": "rapidocr-1.4.4-sellers-3", "clip": None}
+SCORER_VERSION = {"face": "yunet-sface-1", "ocr": "rapidocr-1.4.4-sellers-3", "clip": None,
+                  "checks": "yoloe-11l-clipcolor-1"}
 N_FRAMES = 8
 
 # KEYS[1]=spent KEYS[2]=reserved  ARGV[1]=budget ARGV[2]=amount -> 1 reserved / 0 over budget
@@ -80,7 +81,7 @@ def estimate(model: str, t: Target) -> int:
 
 def create_run(name: str, es: evalset.EvalSet, models: list[str] | None, budget: int,
                suites: list[str] | None = None, samples: int = 1,
-               items: list[str] | None = None) -> int:
+               items: list[str] | None = None, reuse_runs: list[int] | None = None) -> int:
     with db.connect() as c:
         db.register_evalset(c, es)
         tlist = {}
@@ -94,15 +95,37 @@ def create_run(name: str, es: evalset.EvalSet, models: list[str] | None, budget:
             (es.hash, name, json.dumps([t.__dict__ for t in tlist.values()]), samples, budget)).fetchone()
         run_id = row["id"]
         n = 0
+        reusable = _reusable(c, reuse_runs or [])
         for it in chosen:
             for t in targets.targets_for(it.endpoint, models):
                 for s in range(samples):
-                    n += c.execute(
-                        """INSERT INTO generations (run_id, item_id, item_hash, target_key, model, sample)
-                           VALUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING""",
-                        (run_id, it.id, it.hash, t.key, targets.model_of(t.key), s)).rowcount
+                    old = reusable.get((it.render_key, t.key, s))
+                    if old:
+                        c.execute(
+                            """INSERT INTO generations (run_id, item_id, item_hash, target_key, model, sample, status,
+                                   mh_project_id, credits, paths, submitted_at, finished_at, reused_from)
+                               VALUES (%s,%s,%s,%s,%s,%s,'complete',%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING""",
+                            (run_id, it.id, it.hash, t.key, targets.model_of(t.key), s, old["mh_project_id"],
+                             old["credits"], old["paths"], old["submitted_at"], old["finished_at"], old["id"]))
+                    else:
+                        c.execute(
+                            """INSERT INTO generations (run_id, item_id, item_hash, target_key, model, sample)
+                               VALUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING""",
+                            (run_id, it.id, it.hash, t.key, targets.model_of(t.key), s))
         c.commit()
     return run_id
+
+
+def _reusable(c, run_ids: list[int]) -> dict:
+    """Completed renders from earlier runs, keyed by (render_key, target, sample)."""
+    out = {}
+    for rid in run_ids:
+        ver = c.execute("SELECT e.version FROM runs r JOIN evalsets e ON e.hash=r.evalset_hash WHERE r.id=%s",
+                        (rid,)).fetchone()["version"]
+        items = evalset.load(ver, verify=False).by_id()
+        for g in c.execute("SELECT * FROM generations WHERE run_id=%s AND status='complete'", (rid,)):
+            out[(items[g["item_id"]].render_key, g["target_key"], g["sample"])] = g
+    return out
 
 
 def _target(run: dict, key: str) -> Target:
@@ -184,6 +207,11 @@ def scorers() -> dict:
         clip = ClipScorer()
         SCORER_VERSION["clip"] = f"{clip.arch}-onnx-2"
         _SCORERS.update(clip=clip, face=FaceScorer(), ocr=OcrScorer())
+        try:
+            from .scorers.checks import CheckScorer
+            _SCORERS["checks"] = CheckScorer(clip)
+        except ImportError:   # torch / ultralytics not installed: v1-style scoring only
+            pass
     return _SCORERS
 
 
@@ -198,6 +226,8 @@ def score_item(item: evalset.Item, path: str, ref: pathlib.Path | None) -> dict:
     if "clip" in item.scorers:
         adh = frames[-max(1, len(frames) // 3):] if item.adherence_frames == "last_third" else frames
         out["clip"] = S["clip"].score(adh, item.scene or item.prompt, list(item.foils) or None)
+    if "checks" in item.scorers:
+        out["checks"] = S["checks"].score(frames, list(item.checks))
     q, ok = quality.judge(item.suite, out)
     out["quality"] = {"q": q, "pass": ok, "version": quality.QUALITY_VERSION}
     return out
