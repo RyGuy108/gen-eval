@@ -1,0 +1,146 @@
+{
+  "adherence": {
+    "n": 72,
+    "base_rate": 0.8611111111111112,
+    "accuracy": 0.7083333333333334,
+    "precision": 0.9183673469387755,
+    "recall": 0.7258064516129032,
+    "auc": 0.6685483870967742,
+    "p_at_1": 1.0,
+    "p_at_3": 0.9523809523809523,
+    "p_at_5_pooled": 1.0,
+    "best_threshold": 0.0,
+    "best_threshold_accuracy": 0.8611111111111112,
+    "model_rank_spearman": 0.8508410434878082,
+    "models": {
+      "flux-2-klein": {
+        "scorer_pass": 0.5714285714285714,
+        "label_pass": 0.7857142857142857
+      },
+      "nano-banana-2": {
+        "scorer_pass": 0.7857142857142857,
+        "label_pass": 1.0
+      },
+      "nano-banana-pro": {
+        "scorer_pass": 0.75,
+        "label_pass": 1.0
+      },
+      "qwen-image-2.1": {
+        "scorer_pass": 0.7857142857142857,
+        "label_pass": 0.9285714285714286
+      },
+      "seedream-v4.5": {
+        "scorer_pass": 0.625,
+        "label_pass": 0.875
+      },
+      "z-image-turbo": {
+        "scorer_pass": 0.5714285714285714,
+        "label_pass": 0.6428571428571429
+      }
+    }
+  },
+  "character": {
+    "n": 35,
+    "base_rate": 0.9428571428571428,
+    "accuracy": 0.8285714285714286,
+    "precision": 0.9354838709677419,
+    "recall": 0.8787878787878788,
+    "auc": 0.8181818181818182,
+    "p_at_1": 1.0,
+    "p_at_3": 0.9523809523809524,
+    "p_at_5_pooled": 1.0,
+    "best_threshold": 0.6587,
+    "best_threshold_accuracy": 0.9428571428571428,
+    "model_rank_spearman": -0.3042903097250923,
+    "models": {
+      "flux-2-klein": {
+        "scorer_pass": 0.8571428571428571,
+        "label_pass": 1.0
+      },
+      "nano-banana-2": {
+        "scorer_pass": 0.8571428571428571,
+        "label_pass": 0.8571428571428571
+      },
+      "nano-banana-pro": {
+        "scorer_pass": 1.0,
+        "label_pass": 0.8571428571428571
+      },
+      "qwen-edit": {
+        "scorer_pass": 0.7142857142857143,
+        "label_pass": 1.0
+      },
+      "seedream-v4.5": {
+        "scorer_pass": 1.0,
+        "label_pass": 1.0
+      }
+    }
+  },
+  "text": {
+    "n": 48,
+    "base_rate": 0.7291666666666666,
+    "accuracy": 0.875,
+    "precision": 0.9393939393939394,
+    "recall": 0.8857142857142857,
+    "auc": 0.8758241758241758,
+    "p_at_1": 0.75,
+    "p_at_3": 0.9166666666666666,
+    "p_at_5_pooled": 1.0,
+    "best_threshold": 0.8,
+    "best_threshold_accuracy": 0.8541666666666666,
+    "model_rank_spearman": 0.7419354838709679,
+    "models": {
+      "flux-2-klein": {
+        "scorer_pass": 0.125,
+        "label_pass": 0.0
+      },
+      "nano-banana-2": {
+        "scorer_pass": 0.875,
+        "label_pass": 0.75
+      },
+      "nano-banana-pro": {
+        "scorer_pass": 0.875,
+        "label_pass": 1.0
+      },
+      "qwen-image-2.1": {
+        "scorer_pass": 0.875,
+        "label_pass": 1.0
+      },
+      "seedream-v4.5": {
+        "scorer_pass": 0.75,
+        "label_pass": 1.0
+      },
+      "z-image-turbo": {
+        "scorer_pass": 0.625,
+        "label_pass": 0.625
+      }
+    }
+  },
+  "video": {
+    "n": 9,
+    "base_rate": 1.0,
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "auc": NaN,
+    "p_at_1": 1.0,
+    "p_at_3": 1.0,
+    "p_at_5_pooled": 1.0,
+    "best_threshold": 0.8938,
+    "best_threshold_accuracy": 0.8888888888888888,
+    "model_rank_spearman": NaN,
+    "models": {
+      "kling-3.0": {
+        "scorer_pass": 1.0,
+        "label_pass": 1.0
+      },
+      "ltx-2.5": {
+        "scorer_pass": 1.0,
+        "label_pass": 1.0
+      },
+      "seedance-2.0-mini": {
+        "scorer_pass": 1.0,
+        "label_pass": 1.0
+      }
+    }
+  }
+}

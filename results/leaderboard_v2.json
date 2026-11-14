@@ -1,0 +1,397 @@
+{
+  "runs": [
+    4
+  ],
+  "n_outputs": 164,
+  "credits_spent": 8575,
+  "suites": {
+    "adherence": [
+      {
+        "model": "z-image-turbo",
+        "n": 14,
+        "credits": 5.0,
+        "pass_rate": 0.5714285714285714,
+        "pass_ci": [
+          0.2857142857142857,
+          0.8571428571428571
+        ],
+        "quality": 0.8273809523809523,
+        "quality_ci": [
+          0.7142857142857143,
+          0.9345238095238094
+        ],
+        "credits_per_pass": 8.75,
+        "quality_per_100c": 16.547619047619044,
+        "pareto": true,
+        "rank": 1
+      },
+      {
+        "model": "flux-2-klein",
+        "n": 14,
+        "credits": 5.0,
+        "pass_rate": 0.5714285714285714,
+        "pass_ci": [
+          0.2857142857142857,
+          0.8571428571428571
+        ],
+        "quality": 0.6904761904761905,
+        "quality_ci": [
+          0.47619047619047616,
+          0.8812499999999982
+        ],
+        "credits_per_pass": 8.75,
+        "quality_per_100c": 13.80952380952381,
+        "pareto": false,
+        "rank": 2
+      },
+      {
+        "model": "qwen-image-2.1",
+        "n": 14,
+        "credits": 10.0,
+        "pass_rate": 0.7857142857142857,
+        "pass_ci": [
+          0.5714285714285714,
+          1.0
+        ],
+        "quality": 0.9107142857142857,
+        "quality_ci": [
+          0.8035714285714286,
+          1.0
+        ],
+        "credits_per_pass": 12.727272727272728,
+        "quality_per_100c": 9.107142857142858,
+        "pareto": true,
+        "rank": 3
+      },
+      {
+        "model": "nano-banana-2",
+        "n": 14,
+        "credits": 50.0,
+        "pass_rate": 0.7857142857142857,
+        "pass_ci": [
+          0.5714285714285714,
+          1.0
+        ],
+        "quality": 0.9226190476190476,
+        "quality_ci": [
+          0.8333333333333333,
+          1.0
+        ],
+        "credits_per_pass": 63.63636363636364,
+        "quality_per_100c": 1.8452380952380951,
+        "pareto": true,
+        "rank": 4
+      },
+      {
+        "model": "seedream-v4.5",
+        "n": 8,
+        "credits": 50.0,
+        "pass_rate": 0.625,
+        "pass_ci": [
+          0.25,
+          0.875
+        ],
+        "quality": 0.7708333333333333,
+        "quality_ci": [
+          0.5416666666666666,
+          0.9375
+        ],
+        "credits_per_pass": 80.0,
+        "quality_per_100c": 1.5416666666666665,
+        "pareto": false,
+        "rank": 5
+      },
+      {
+        "model": "nano-banana-pro",
+        "n": 8,
+        "credits": 150.0,
+        "pass_rate": 0.75,
+        "pass_ci": [
+          0.375,
+          1.0
+        ],
+        "quality": 0.8125,
+        "quality_ci": [
+          0.5625,
+          1.0
+        ],
+        "credits_per_pass": 200.0,
+        "quality_per_100c": 0.5416666666666666,
+        "pareto": false,
+        "rank": 6
+      }
+    ],
+    "character": [
+      {
+        "model": "flux-2-klein",
+        "n": 7,
+        "credits": 5.0,
+        "pass_rate": 0.8571428571428571,
+        "pass_ci": [
+          0.5714285714285714,
+          1.0
+        ],
+        "quality": 0.9324383386210232,
+        "quality_ci": [
+          0.8367486174104535,
+          0.9968700557903055
+        ],
+        "credits_per_pass": 5.833333333333334,
+        "quality_per_100c": 18.648766772420466,
+        "pareto": true,
+        "rank": 1
+      },
+      {
+        "model": "qwen-edit",
+        "n": 7,
+        "credits": 10.0,
+        "pass_rate": 0.7142857142857143,
+        "pass_ci": [
+          0.2857142857142857,
+          1.0
+        ],
+        "quality": 0.8745875387269185,
+        "quality_ci": [
+          0.778014130836374,
+          0.9590874738190752
+        ],
+        "credits_per_pass": 14.0,
+        "quality_per_100c": 8.745875387269185,
+        "pareto": false,
+        "rank": 2
+      },
+      {
+        "model": "seedream-v4.5",
+        "n": 7,
+        "credits": 50.0,
+        "pass_rate": 1.0,
+        "pass_ci": [
+          1.0,
+          1.0
+        ],
+        "quality": 0.9999612118492609,
+        "quality_ci": [
+          0.99991321741762,
+          0.9999967134330255
+        ],
+        "credits_per_pass": 50.0,
+        "quality_per_100c": 1.999922423698522,
+        "pareto": true,
+        "rank": 3
+      },
+      {
+        "model": "nano-banana-2",
+        "n": 7,
+        "credits": 50.0,
+        "pass_rate": 0.8571428571428571,
+        "pass_ci": [
+          0.5714285714285714,
+          1.0
+        ],
+        "quality": 0.8926009267894999,
+        "quality_ci": [
+          0.8143565008407533,
+          0.9649209499613135
+        ],
+        "credits_per_pass": 58.333333333333336,
+        "quality_per_100c": 1.7852018535789997,
+        "pareto": false,
+        "rank": 4
+      },
+      {
+        "model": "nano-banana-pro",
+        "n": 7,
+        "credits": 150.0,
+        "pass_rate": 1.0,
+        "pass_ci": [
+          1.0,
+          1.0
+        ],
+        "quality": 0.9660861108959288,
+        "quality_ci": [
+          0.9421471771081128,
+          0.9893876480783386
+        ],
+        "credits_per_pass": 150.0,
+        "quality_per_100c": 0.6440574072639526,
+        "pareto": false,
+        "rank": 5
+      }
+    ],
+    "text": [
+      {
+        "model": "z-image-turbo",
+        "n": 8,
+        "credits": 5.0,
+        "pass_rate": 0.625,
+        "pass_ci": [
+          0.25,
+          1.0
+        ],
+        "quality": 0.9144736842105263,
+        "quality_ci": [
+          0.8302631578947368,
+          0.9815789473684211
+        ],
+        "credits_per_pass": 8.0,
+        "quality_per_100c": 18.289473684210527,
+        "pareto": true,
+        "rank": 1
+      },
+      {
+        "model": "qwen-image-2.1",
+        "n": 8,
+        "credits": 10.0,
+        "pass_rate": 0.875,
+        "pass_ci": [
+          0.625,
+          1.0
+        ],
+        "quality": 0.975,
+        "quality_ci": [
+          0.925,
+          1.0
+        ],
+        "credits_per_pass": 11.428571428571429,
+        "quality_per_100c": 9.75,
+        "pareto": true,
+        "rank": 2
+      },
+      {
+        "model": "flux-2-klein",
+        "n": 8,
+        "credits": 5.0,
+        "pass_rate": 0.125,
+        "pass_ci": [
+          0.0,
+          0.375
+        ],
+        "quality": 0.8153629855052069,
+        "quality_ci": [
+          0.7247978292991838,
+          0.9078126759076833
+        ],
+        "credits_per_pass": 40.0,
+        "quality_per_100c": 16.30725971010414,
+        "pareto": false,
+        "rank": 3
+      },
+      {
+        "model": "nano-banana-2",
+        "n": 8,
+        "credits": 50.0,
+        "pass_rate": 0.875,
+        "pass_ci": [
+          0.625,
+          1.0
+        ],
+        "quality": 0.9625,
+        "quality_ci": [
+          0.8875,
+          1.0
+        ],
+        "credits_per_pass": 57.142857142857146,
+        "quality_per_100c": 1.925,
+        "pareto": false,
+        "rank": 4
+      },
+      {
+        "model": "seedream-v4.5",
+        "n": 8,
+        "credits": 50.0,
+        "pass_rate": 0.75,
+        "pass_ci": [
+          0.375,
+          1.0
+        ],
+        "quality": 0.9777777777777779,
+        "quality_ci": [
+          0.9472222222222222,
+          1.0
+        ],
+        "credits_per_pass": 66.66666666666667,
+        "quality_per_100c": 1.9555555555555557,
+        "pareto": true,
+        "rank": 5
+      },
+      {
+        "model": "nano-banana-pro",
+        "n": 8,
+        "credits": 150.0,
+        "pass_rate": 0.875,
+        "pass_ci": [
+          0.625,
+          1.0
+        ],
+        "quality": 0.9821428571428572,
+        "quality_ci": [
+          0.9464285714285714,
+          1.0
+        ],
+        "credits_per_pass": 171.42857142857142,
+        "quality_per_100c": 0.6547619047619048,
+        "pareto": true,
+        "rank": 6
+      }
+    ],
+    "video": [
+      {
+        "model": "ltx-2.5",
+        "n": 3,
+        "credits": 120.0,
+        "pass_rate": 1.0,
+        "pass_ci": [
+          1.0,
+          1.0
+        ],
+        "quality": 0.9504273671370198,
+        "quality_ci": [
+          0.9244382527759264,
+          0.9842196145109142
+        ],
+        "credits_per_pass": 120.0,
+        "quality_per_100c": 0.7920228059475165,
+        "pareto": true,
+        "rank": 1
+      },
+      {
+        "model": "seedance-2.0-mini",
+        "n": 3,
+        "credits": 240.0,
+        "pass_rate": 1.0,
+        "pass_ci": [
+          1.0,
+          1.0
+        ],
+        "quality": 0.9413288017193913,
+        "quality_ci": [
+          0.8937697937749878,
+          0.9933758325147278
+        ],
+        "credits_per_pass": 240.0,
+        "quality_per_100c": 0.3922203340497463,
+        "pareto": false,
+        "rank": 2
+      },
+      {
+        "model": "kling-3.0",
+        "n": 3,
+        "credits": 300.0,
+        "pass_rate": 1.0,
+        "pass_ci": [
+          1.0,
+          1.0
+        ],
+        "quality": 0.9614938315224859,
+        "quality_ci": [
+          0.9381952251095697,
+          0.979791658209389
+        ],
+        "credits_per_pass": 300.0,
+        "quality_per_100c": 0.32049794384082864,
+        "pareto": true,
+        "rank": 3
+      }
+    ]
+  }
+}

@@ -1,0 +1,166 @@
+{"item_id": "t01", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "t01", "model": "nano-banana-2", "acceptable": false, "note": "garbled fake menu text under the sign"}
+{"item_id": "t01", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "t01", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "t01", "model": "flux-2-klein", "acceptable": false, "note": "MORNNG"}
+{"item_id": "t01", "model": "z-image-turbo", "acceptable": true, "note": null}
+{"item_id": "t01", "model": "gpt-image-2", "acceptable": true, "note": null}
+{"item_id": "t02", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "t02", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "t02", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "t02", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "t02", "model": "flux-2-klein", "acceptable": false, "note": "LIAST"}
+{"item_id": "t02", "model": "z-image-turbo", "acceptable": false, "note": "garbled credit line at top"}
+{"item_id": "t03", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "t03", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "t03", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "t03", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "t03", "model": "flux-2-klein", "acceptable": false, "note": "OK YEST DEVEOPVER"}
+{"item_id": "t03", "model": "z-image-turbo", "acceptable": true, "note": null}
+{"item_id": "t04", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "t04", "model": "nano-banana-2", "acceptable": false, "note": "garbled small header/subtotal text"}
+{"item_id": "t04", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "t04", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "t04", "model": "flux-2-klein", "acceptable": false, "note": "2 TAOS / HACIOS, wrong prices"}
+{"item_id": "t04", "model": "z-image-turbo", "acceptable": false, "note": "FAISS header and garbled footer"}
+{"item_id": "t05", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "t05", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "t05", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "t05", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "t05", "model": "flux-2-klein", "acceptable": false, "note": "7NDAE"}
+{"item_id": "t05", "model": "z-image-turbo", "acceptable": true, "note": null}
+{"item_id": "t06", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "t06", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "t06", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "t06", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "t06", "model": "flux-2-klein", "acceptable": false, "note": "WILDFOWER"}
+{"item_id": "t06", "model": "z-image-turbo", "acceptable": true, "note": null}
+{"item_id": "t07", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "t07", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "t07", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "t07", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "t07", "model": "flux-2-klein", "acceptable": false, "note": "MOCHA 525 (no decimal point)"}
+{"item_id": "t07", "model": "z-image-turbo", "acceptable": true, "note": null}
+{"item_id": "t08", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "t08", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "t08", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "t08", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "t08", "model": "flux-2-klein", "acceptable": false, "note": "ALLGHBIOM"}
+{"item_id": "t08", "model": "z-image-turbo", "acceptable": false, "note": "ALGORITM plus garbled blurb"}
+{"item_id": "a01", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "a01", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "a01", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "a01", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "a01", "model": "flux-2-klein", "acceptable": false, "note": "two red apples and two pears"}
+{"item_id": "a01", "model": "z-image-turbo", "acceptable": false, "note": "two apples"}
+{"item_id": "a02", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "a02", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "a02", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "a02", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "a02", "model": "flux-2-klein", "acceptable": true, "note": null}
+{"item_id": "a02", "model": "z-image-turbo", "acceptable": true, "note": null}
+{"item_id": "a03", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "a03", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "a03", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "a03", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "a03", "model": "flux-2-klein", "acceptable": true, "note": null}
+{"item_id": "a03", "model": "z-image-turbo", "acceptable": true, "note": null}
+{"item_id": "a04", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "a04", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "a04", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "a04", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "a04", "model": "flux-2-klein", "acceptable": true, "note": null}
+{"item_id": "a04", "model": "z-image-turbo", "acceptable": false, "note": "bird is mostly yellow and white (blue tit), not a blue bird"}
+{"item_id": "a05", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "a05", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "a05", "model": "seedream-v4.5", "acceptable": false, "note": "six balloons"}
+{"item_id": "a05", "model": "qwen-image-2.1", "acceptable": false, "note": "six balloons"}
+{"item_id": "a05", "model": "flux-2-klein", "acceptable": false, "note": "six balloons"}
+{"item_id": "a05", "model": "z-image-turbo", "acceptable": false, "note": "seven balloons"}
+{"item_id": "a06", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "a06", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "a06", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "a06", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "a06", "model": "flux-2-klein", "acceptable": true, "note": null}
+{"item_id": "a06", "model": "z-image-turbo", "acceptable": false, "note": "two zebras"}
+{"item_id": "a07", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "a07", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "a07", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "a07", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "a07", "model": "flux-2-klein", "acceptable": true, "note": null}
+{"item_id": "a07", "model": "z-image-turbo", "acceptable": true, "note": null}
+{"item_id": "a08", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "a08", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "a08", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "a08", "model": "qwen-image-2.1", "acceptable": true, "note": null}
+{"item_id": "a08", "model": "flux-2-klein", "acceptable": true, "note": null}
+{"item_id": "a08", "model": "z-image-turbo", "acceptable": true, "note": null}
+{"item_id": "c01", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "c01", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "c01", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "c01", "model": "qwen-edit", "acceptable": true, "note": null}
+{"item_id": "c01", "model": "flux-2-klein", "acceptable": true, "note": null}
+{"item_id": "c01", "model": "gpt-image-2", "acceptable": true, "note": null}
+{"item_id": "c02", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "c02", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "c02", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "c02", "model": "qwen-edit", "acceptable": true, "note": null}
+{"item_id": "c02", "model": "flux-2-klein", "acceptable": true, "note": null}
+{"item_id": "c03", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "c03", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "c03", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "c03", "model": "qwen-edit", "acceptable": true, "note": null}
+{"item_id": "c03", "model": "flux-2-klein", "acceptable": true, "note": null}
+{"item_id": "c04", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "c04", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "c04", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "c04", "model": "qwen-edit", "acceptable": true, "note": null}
+{"item_id": "c04", "model": "flux-2-klein", "acceptable": true, "note": null}
+{"item_id": "c05", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "c05", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "c05", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "c05", "model": "qwen-edit", "acceptable": true, "note": null}
+{"item_id": "c05", "model": "flux-2-klein", "acceptable": true, "note": null}
+{"item_id": "c06", "model": "nano-banana-pro", "acceptable": false, "note": "short straight hair, no mustache: different person"}
+{"item_id": "c06", "model": "nano-banana-2", "acceptable": false, "note": "straight hair: different person"}
+{"item_id": "c06", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "c06", "model": "qwen-edit", "acceptable": true, "note": null}
+{"item_id": "c06", "model": "flux-2-klein", "acceptable": true, "note": null}
+{"item_id": "c07", "model": "nano-banana-pro", "acceptable": true, "note": null}
+{"item_id": "c07", "model": "nano-banana-2", "acceptable": true, "note": null}
+{"item_id": "c07", "model": "seedream-v4.5", "acceptable": true, "note": null}
+{"item_id": "c07", "model": "qwen-edit", "acceptable": true, "note": null}
+{"item_id": "c07", "model": "flux-2-klein", "acceptable": true, "note": null}
+{"item_id": "v01", "model": "kling-3.0", "acceptable": true, "note": null}
+{"item_id": "v01", "model": "seedance-2.0-mini", "acceptable": true, "note": null}
+{"item_id": "v01", "model": "ltx-2.5", "acceptable": true, "note": null}
+{"item_id": "v02", "model": "kling-3.0", "acceptable": true, "note": null}
+{"item_id": "v02", "model": "seedance-2.0-mini", "acceptable": true, "note": null}
+{"item_id": "v02", "model": "ltx-2.5", "acceptable": true, "note": null}
+{"item_id": "v03", "model": "kling-3.0", "acceptable": true, "note": null}
+{"item_id": "v03", "model": "seedance-2.0-mini", "acceptable": true, "note": null}
+{"item_id": "v03", "model": "ltx-2.5", "acceptable": true, "note": null}
+{"item_id": "a09", "model": "nano-banana-2", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a09", "model": "qwen-image-2.1", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a09", "model": "flux-2-klein", "acceptable": false, "note": "one red umbrella, not two", "heldout": true}
+{"item_id": "a09", "model": "z-image-turbo", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a10", "model": "nano-banana-2", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a10", "model": "qwen-image-2.1", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a10", "model": "flux-2-klein", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a10", "model": "z-image-turbo", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a11", "model": "nano-banana-2", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a11", "model": "qwen-image-2.1", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a11", "model": "flux-2-klein", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a11", "model": "z-image-turbo", "acceptable": false, "note": "three oranges", "heldout": true}
+{"item_id": "a12", "model": "nano-banana-2", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a12", "model": "qwen-image-2.1", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a12", "model": "flux-2-klein", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a12", "model": "z-image-turbo", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a13", "model": "nano-banana-2", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a13", "model": "qwen-image-2.1", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a13", "model": "flux-2-klein", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a13", "model": "z-image-turbo", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a14", "model": "nano-banana-2", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a14", "model": "qwen-image-2.1", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a14", "model": "flux-2-klein", "acceptable": true, "note": null, "heldout": true}
+{"item_id": "a14", "model": "z-image-turbo", "acceptable": true, "note": null, "heldout": true}
