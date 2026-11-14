@@ -85,5 +85,6 @@ class ClipScorer:
             p /= p.sum()
             out["contrastive"] = float(p[0])
             out["beats_all_foils"] = bool(logits[0] > logits[1:].max())
+            out["margin"] = float((logits[0] - logits[1:].max()) / LOGIT_SCALE)   # cosine units
             out["n_foils"] = len(foils)
         return out

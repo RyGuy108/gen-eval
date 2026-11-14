@@ -36,7 +36,6 @@ def _vid(model: str, res: str, list_credits: float, seconds: float = 5) -> Model
 IMAGE = [
     _img("nano-banana-pro", "1k", 150),
     _img("nano-banana-2", "1k", 50),
-    _img("gpt-image-2", "1k", 50),
     _img("seedream-v4.5", "1k", 50),
     _img("qwen-image-2.1", "1k", 10, edit_model="qwen-edit"),
     _img("flux-2-klein", "1k", 5),
@@ -49,12 +48,19 @@ VIDEO = [
     _vid("ltx-2.5", "480p", 0),
 ]
 
-ALL = {m.name: m for m in IMAGE + VIDEO}
+# Evaluated in the first probe only (charged 100 credits at 1k against a 50 list price); add it back
+# to IMAGE to include it in a full run.
+EXTRA = [
+    _img("gpt-image-2", "1k", 50),
+]
+
+ALL = {m.name: m for m in IMAGE + VIDEO + EXTRA}
 
 
 def targets_for(endpoint: str, models: list[str] | None = None) -> list[Target]:
     out = []
-    for m in IMAGE + VIDEO:
+    pool = IMAGE + VIDEO + [m for m in EXTRA if models and m.name in models]
+    for m in pool:
         if models and m.name not in models:
             continue
         t = getattr(m, endpoint)

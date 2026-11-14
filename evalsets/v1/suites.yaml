@@ -28,8 +28,8 @@ suites:
         prompt: 'Product photo of a white ceramic coffee mug printed with the words "WORLD''S OKAYEST DEVELOPER" in black serif type'
         text: ["WORLD'S OKAYEST DEVELOPER"]
       - id: t04
-        prompt: 'A glowing red neon sign in a dark diner window that says "OPEN 24 HOURS"'
-        text: ["OPEN 24 HOURS"]
+        prompt: 'A close-up photo of a printed restaurant receipt on a wooden table with three lines: "2 TACOS 8.50", "1 HORCHATA 3.25" and "TOTAL 11.75"'
+        text: ["2 TACOS 8.50", "1 HORCHATA 3.25", "TOTAL 11.75"]
       - id: t05
         prompt: 'A YouTube thumbnail of a surprised young man pointing at bold yellow text that says "I TRIED 7 AI MODELS"'
         text: ["I TRIED 7 AI MODELS"]
@@ -40,8 +40,8 @@ suites:
         prompt: 'A cafe chalkboard menu with three lines written in white chalk: "LATTE 4.50", "MOCHA 5.25", "CHAI 4.75"'
         text: ["LATTE 4.50", "MOCHA 5.25", "CHAI 4.75"]
       - id: t08
-        prompt: 'Two green street signs on one pole at an intersection, one reads "QUANTUM AVE" and the other reads "FIBONACCI ST"'
-        text: ["QUANTUM AVE", "FIBONACCI ST"]
+        prompt: 'A hardcover book cover for a novel titled "THE QUIET ALGORITHM" with the author name "ELENA VASQUEZ-MORROW" printed below the title'
+        text: ["THE QUIET ALGORITHM", "ELENA VASQUEZ-MORROW"]
 
   adherence:
     task: image
@@ -67,11 +67,11 @@ suites:
           - a cat wearing a red raincoat sitting on top of a stack of books
           - a cat wearing a yellow raincoat sitting next to a stack of books
       - id: a04
-        prompt: an astronaut riding a horse on a beach at sunset
+        prompt: a small blue bird sitting on the head of a large brown bear
         foils:
-          - an astronaut riding a horse in a snowy forest
-          - an astronaut walking next to a horse on a beach at sunset
-          - a cowboy riding a horse on a beach at sunset
+          - a small brown bird sitting on the head of a large blue bear
+          - a small blue bird flying next to a large brown bear
+          - a small blue bird sitting on the head of a large brown moose
       - id: a05
         prompt: five hot air balloons floating over a desert canyon
         foils:
@@ -79,11 +79,11 @@ suites:
           - five hot air balloons floating over a snowy mountain range
           - five kites floating over a desert canyon
       - id: a06
-        prompt: a black and white photo of a vintage bicycle leaning against a brick wall
+        prompt: a giraffe and a zebra standing side by side, the giraffe is wearing a red scarf
         foils:
-          - a color photo of a vintage bicycle leaning against a brick wall
-          - a black and white photo of a vintage motorcycle leaning against a brick wall
-          - a black and white photo of a vintage bicycle leaning against a wooden fence
+          - a giraffe and a zebra standing side by side, the zebra is wearing a red scarf
+          - a giraffe and a zebra standing side by side, the giraffe is wearing a blue scarf
+          - two giraffes standing side by side, one is wearing a red scarf
       - id: a07
         prompt: a glass of orange juice next to an open laptop showing a spreadsheet
         foils:
@@ -144,6 +144,14 @@ suites:
         foils:
           - a studio headshot of a young man on a plain grey background
           - a young man riding a bicycle on a country road
+
+      - id: c07
+        ref: ingrid
+        prompt: The same woman from the reference photo sitting at a dinner table with a young man, both laughing, warm restaurant lighting, photorealistic
+        scene: an older woman and a young man laughing together at a dinner table
+        foils:
+          - a studio headshot of an older woman on a plain grey background
+          - an older woman sitting alone at a dinner table
 
   video:
     task: video

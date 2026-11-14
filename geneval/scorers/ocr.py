@@ -9,6 +9,11 @@ target may sit inside a longer line like "OPEN - MORNING BREW CAFE - 7AM") and s
 after normalizing case, punctuation and whitespace. A garbled sign ("MORNIG BRWE CAFE") lands around
 0.8, a missing one at 0. `exact` is true only if every required string is read back perfectly, which
 is the bar a customer printing a poster actually has.
+
+Models also invent text nobody asked for: fake menu boards, lorem-ipsum signage, garbled small print.
+`gibberish` counts OCR'd words (4+ letters, not part of a target) that are not English words by
+wordfreq's frequency list. Real background text ("COFFEE", "PASTRIES") is fine; "TUNCKEOGFHCK" is
+the artifact customers screenshot and complain about.
 """
 from __future__ import annotations
 
@@ -16,6 +21,7 @@ import re
 
 import numpy as np
 from PIL import Image
+from wordfreq import zipf_frequency
 
 
 def normalize(s: str) -> str:
@@ -49,6 +55,16 @@ def char_accuracy(target: str, text: str) -> float:
     return float(max(0.0, a, b))
 
 
+def gibberish_words(text: str, targets: list[str]) -> list[str]:
+    allowed = set(normalize(" ".join(targets)).split())
+    out = []
+    for w in normalize(text).split():
+        w = w.strip("'")
+        if len(w) >= 4 and w.isalpha() and w not in allowed and zipf_frequency(w.lower(), "en") < 1.0:
+            out.append(w)
+    return out
+
+
 class OcrScorer:
     def __init__(self, min_conf: float = 0.5):
         from rapidocr_onnxruntime import RapidOCR
@@ -70,8 +86,10 @@ class OcrScorer:
             lines = self.read(im)
             text = " ".join(t for t, _ in lines)
             per = [char_accuracy(t, text) for t in targets]
+            junk = gibberish_words(text, targets)
             r = {"legibility": float(np.mean(per)), "per_target": per,
-                 "exact": all(p >= 0.999 for p in per), "ocr_text": text[:400]}
+                 "exact": all(p >= 0.999 for p in per), "gibberish": len(junk),
+                 "gibberish_words": junk[:20], "ocr_text": text[:400]}
             if r["legibility"] > best["legibility"]:
                 best = r
         return best
