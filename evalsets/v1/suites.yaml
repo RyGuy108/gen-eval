@@ -1,0 +1,175 @@
+# gen-eval eval set v1
+#
+# Frozen once published: the loader hashes every item and reference image and refuses to run if
+# the hash no longer matches MANIFEST.json. To change anything, copy to evalsets/v2 and bump.
+#
+# Every item names the scorers that apply to it. Foils are the prompt with exactly one fact
+# broken; the contrastive CLIP test asks whether the output matches the prompt better than all of
+# them. Character items always carry a "plain studio headshot" foil so a model that just returns
+# the reference photo cannot score well.
+
+version: v1
+defaults:
+  aspect_ratio: "1:1"
+
+suites:
+  text:
+    task: image
+    endpoint: generate
+    description: Exact text rendered in-scene (signs, posters, labels, thumbnails).
+    items:
+      - id: t01
+        prompt: 'A photo of a small corner coffee shop with a painted wooden sign above the door that reads "MORNING BREW CAFE"'
+        text: ["MORNING BREW CAFE"]
+      - id: t02
+        prompt: 'A movie poster for a thriller with the title "THE LAST LIGHTHOUSE" in large letters and the line "IN THEATERS JUNE 12" at the bottom'
+        text: ["THE LAST LIGHTHOUSE", "IN THEATERS JUNE 12"]
+      - id: t03
+        prompt: 'Product photo of a white ceramic coffee mug printed with the words "WORLD''S OKAYEST DEVELOPER" in black serif type'
+        text: ["WORLD'S OKAYEST DEVELOPER"]
+      - id: t04
+        prompt: 'A glowing red neon sign in a dark diner window that says "OPEN 24 HOURS"'
+        text: ["OPEN 24 HOURS"]
+      - id: t05
+        prompt: 'A YouTube thumbnail of a surprised young man pointing at bold yellow text that says "I TRIED 7 AI MODELS"'
+        text: ["I TRIED 7 AI MODELS"]
+      - id: t06
+        prompt: 'A glass jar of honey on a kitchen counter with a kraft paper label reading "WILDFLOWER HONEY" and below it "NET WT 12 OZ"'
+        text: ["WILDFLOWER HONEY", "NET WT 12 OZ"]
+      - id: t07
+        prompt: 'A cafe chalkboard menu with three lines written in white chalk: "LATTE 4.50", "MOCHA 5.25", "CHAI 4.75"'
+        text: ["LATTE 4.50", "MOCHA 5.25", "CHAI 4.75"]
+      - id: t08
+        prompt: 'Two green street signs on one pole at an intersection, one reads "QUANTUM AVE" and the other reads "FIBONACCI ST"'
+        text: ["QUANTUM AVE", "FIBONACCI ST"]
+
+  adherence:
+    task: image
+    endpoint: generate
+    description: Counting, attribute binding, spatial relations, style and composition.
+    items:
+      - id: a01
+        prompt: three red apples and one green pear on a wooden table
+        foils:
+          - two red apples and one green pear on a wooden table
+          - three green apples and one red pear on a wooden table
+          - three red apples and one green pear on a marble counter
+      - id: a02
+        prompt: a red cube to the left of a blue sphere on a white floor
+        foils:
+          - a blue cube to the left of a red sphere on a white floor
+          - a red sphere to the left of a blue cube on a white floor
+          - a red cube and a blue cube on a white floor
+      - id: a03
+        prompt: a cat wearing a yellow raincoat sitting on top of a stack of books
+        foils:
+          - a dog wearing a yellow raincoat sitting on top of a stack of books
+          - a cat wearing a red raincoat sitting on top of a stack of books
+          - a cat wearing a yellow raincoat sitting next to a stack of books
+      - id: a04
+        prompt: an astronaut riding a horse on a beach at sunset
+        foils:
+          - an astronaut riding a horse in a snowy forest
+          - an astronaut walking next to a horse on a beach at sunset
+          - a cowboy riding a horse on a beach at sunset
+      - id: a05
+        prompt: five hot air balloons floating over a desert canyon
+        foils:
+          - one hot air balloon floating over a desert canyon
+          - five hot air balloons floating over a snowy mountain range
+          - five kites floating over a desert canyon
+      - id: a06
+        prompt: a black and white photo of a vintage bicycle leaning against a brick wall
+        foils:
+          - a color photo of a vintage bicycle leaning against a brick wall
+          - a black and white photo of a vintage motorcycle leaning against a brick wall
+          - a black and white photo of a vintage bicycle leaning against a wooden fence
+      - id: a07
+        prompt: a glass of orange juice next to an open laptop showing a spreadsheet
+        foils:
+          - a glass of milk next to an open laptop showing a spreadsheet
+          - a cup of coffee next to an open laptop showing a spreadsheet
+          - a glass of orange juice next to a closed laptop
+      - id: a08
+        prompt: a watercolor painting of a fox sleeping under a pine tree in the snow
+        foils:
+          - an oil painting of a fox sleeping under a pine tree in the snow
+          - a watercolor painting of a fox running under a pine tree in the snow
+          - a watercolor painting of a wolf sleeping under a pine tree in the snow
+
+  character:
+    task: image
+    endpoint: edit
+    description: Keep a reference person's identity in a new scene (reference image -> edit model).
+    items:
+      - id: c01
+        ref: maya
+        prompt: The same woman from the reference photo hiking on a mountain trail at golden hour, wearing a red jacket, three-quarter view, photorealistic
+        scene: a woman hiking on a mountain trail at golden hour wearing a red jacket
+        foils:
+          - a studio headshot of a woman on a plain grey background
+          - a woman sitting in a coffee shop wearing a red jacket
+      - id: c02
+        ref: maya
+        prompt: The same woman from the reference photo working on a laptop in a busy coffee shop, smiling, natural window light, photorealistic
+        scene: a smiling woman working on a laptop in a busy coffee shop
+        foils:
+          - a studio headshot of a woman on a plain grey background
+          - a woman reading a book on a park bench
+      - id: c03
+        ref: dele
+        prompt: The same man from the reference photo giving a talk on a conference stage in front of a large screen, wearing a navy suit, medium shot, photorealistic
+        scene: a man in a navy suit giving a talk on a conference stage in front of a large screen
+        foils:
+          - a studio headshot of a man on a plain grey background
+          - a man in a navy suit sitting at an office desk
+      - id: c04
+        ref: dele
+        prompt: The same man from the reference photo cooking in a home kitchen, wearing an apron, laughing, photorealistic
+        scene: a laughing man cooking in a home kitchen wearing an apron
+        foils:
+          - a studio headshot of a man on a plain grey background
+          - a man washing a car in a driveway
+      - id: c05
+        ref: ingrid
+        prompt: The same woman from the reference photo kneeling in a vegetable garden among tomato plants, wearing a straw hat, sunny day, photorealistic
+        scene: an older woman in a straw hat kneeling in a vegetable garden among tomato plants
+        foils:
+          - a studio headshot of an older woman on a plain grey background
+          - an older woman in a straw hat walking on a beach
+      - id: c06
+        ref: tomas
+        prompt: The same man from the reference photo riding a skateboard in a city plaza, wide shot, photorealistic
+        scene: a young man riding a skateboard in a city plaza
+        foils:
+          - a studio headshot of a young man on a plain grey background
+          - a young man riding a bicycle on a country road
+
+  video:
+    task: video
+    endpoint: animate
+    description: Animate a reference headshot; identity must hold for the whole clip and the action must happen.
+    seconds: 5
+    adherence_frames: last_third   # the prompted action is an end state, so check where the clip lands
+    items:
+      - id: v01
+        ref: maya
+        prompt: She slowly turns her head to the side, then looks back at the camera and breaks into a big warm smile. Static camera, soft studio light.
+        scene: a woman with a big smile looking at the camera
+        foils:
+          - a woman with a serious neutral expression
+          - a woman crying
+      - id: v02
+        ref: dele
+        prompt: He lifts a pair of black over-ear headphones onto his head and starts nodding along to music. Static camera, soft studio light.
+        scene: a man wearing black over-ear headphones
+        foils:
+          - a man wearing glasses and no headphones
+          - a man talking on a phone
+      - id: v03
+        ref: ingrid
+        prompt: She puts on a pair of dark sunglasses and laughs. Static camera, soft studio light.
+        scene: an older woman wearing dark sunglasses and laughing
+        foils:
+          - an older woman with a neutral expression and no sunglasses
+          - an older woman wearing a sun hat
