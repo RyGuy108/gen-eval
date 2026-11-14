@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gen-eval labeling</title>
+<style>
+  :root { --bg:#fafaf9; --fg:#1c1917; --muted:#78716c; --card:#fff; --line:#e7e5e4; --ok:#15803d; --bad:#b91c1c; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --fg:#f5f5f4; --muted:#a8a29e; --card:#292524; --line:#44403c; } }
+  body { margin:0; font:15px/1.5 system-ui, sans-serif; background:var(--bg); color:var(--fg); }
+  main { max-width:1100px; margin:0 auto; padding:16px; }
+  header { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
+  input { font:inherit; padding:4px 8px; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--fg); }
+  .grid { display:grid; grid-template-columns: 1fr 220px; gap:16px; }
+  @media (max-width:700px) { .grid { grid-template-columns:1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px; }
+  img, video { max-width:100%; max-height:70vh; display:block; margin:0 auto; border-radius:6px; }
+  .muted { color:var(--muted); font-size:13px; }
+  .btns { display:flex; gap:8px; margin-top:12px; }
+  button { font:inherit; padding:8px 16px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--fg); cursor:pointer; }
+  button.ok { border-color:var(--ok); color:var(--ok); } button.bad { border-color:var(--bad); color:var(--bad); }
+  code { background:var(--line); padding:1px 4px; border-radius:4px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <strong>gen-eval labeling</strong>
+    <label>runs <input id="runs" size="6" value="1,2"></label>
+    <label>labeler <input id="who" size="10" value=""></label>
+    <button id="load">Load</button>
+    <span class="muted" id="left"></span>
+  </header>
+  <p class="muted">Would you ship this output to a customer without regenerating? Scores and model names are hidden.
+    Keys: <code>y</code> yes, <code>n</code> no, <code>s</code> skip.</p>
+  <div class="grid" id="view" hidden>
+    <div class="card"><div id="media"></div>
+      <p id="prompt"></p><p class="muted" id="need"></p>
+      <div class="btns"><button class="ok" data-v="1">Acceptable (y)</button><button class="bad" data-v="0">Not acceptable (n)</button><button data-v="s">Skip (s)</button></div>
+    </div>
+    <div class="card" id="refbox"><div class="muted">Reference</div><img id="ref" alt="reference"></div>
+  </div>
+</main>
+<script>
+let q = [], cur = null;
+const $ = (id) => document.getElementById(id);
+try { $("who").value = localStorage.getItem("labeler") || ""; } catch (e) {}
+async function load() {
+  const who = $("who").value.trim(); if (!who) { alert("enter a labeler name"); return; }
+  try { localStorage.setItem("labeler", who); } catch (e) {}
+  q = await (await fetch(`/label/queue?runs=${encodeURIComponent($("runs").value)}&labeler=${encodeURIComponent(who)}`)).json();
+  next();
+}
+function next() {
+  cur = q.shift(); $("left").textContent = `${q.length + (cur ? 1 : 0)} left`;
+  if (!cur) { $("view").hidden = true; return; }
+  $("view").hidden = false;
+  const src = `/generations/${cur.id}/media`;
+  $("media").innerHTML = cur.video ? `<video src="${src}" controls autoplay loop muted></video>` : `<img src="${src}" alt="output">`;
+  $("prompt").textContent = cur.prompt;
+  $("need").textContent = cur.text.length ? `Required text: ${cur.text.join(" | ")}` : (cur.ref ? "Must be the same person as the reference." : "");
+  $("refbox").hidden = !cur.ref;
+  if (cur.ref) $("ref").src = `/refs/${cur.ref.split("/").pop()}`;
+}
+async function answer(v) {
+  if (!cur) return;
+  if (v !== "s") await fetch("/labels", { method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ generation_id: cur.id, labeler: $("who").value.trim(), acceptable: v === "1" }) });
+  next();
+}
+$("load").onclick = load;
+document.querySelectorAll("button[data-v]").forEach((b) => b.onclick = () => answer(b.dataset.v));
+document.addEventListener("keydown", (e) => { if (e.target.tagName === "INPUT") return;
+  if (e.key === "y") answer("1"); if (e.key === "n") answer("0"); if (e.key === "s") answer("s"); });
+</script>
+</body>
+</html>
